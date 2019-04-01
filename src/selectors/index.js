@@ -12,13 +12,19 @@ export const filtratedArticlesSelector = createSelector(
   (articles, { from, to }, selected) => {
     console.log('---', 'articles selector')
 
-    return articles.filter((article) => {
-      const published = Date.parse(article.date)
-      return (
-        (!selected.length || selected.find((selected) => selected.value === article.id)) &&
+    let filtratedArticles = {}
+
+    for (const key in articles) {
+      const value = articles[key]
+      const published = Date.parse(value.date)
+      if (
+        (!selected.length || selected.find((selected) => selected.value === key)) &&
         (!from || !to || (published > from && published < to))
-      )
-    })
+      ) {
+        filtratedArticles = { ...filtratedArticles, [key]: value }
+      }
+    }
+    return filtratedArticles
   }
 )
 
@@ -30,4 +36,11 @@ export const createCommentSelector = () =>
     commentsSelector,
     idSelector,
     (comments, id) => comments[id]
+  )
+
+export const createArticleSelector = () =>
+  createSelector(
+    filtratedArticlesSelector,
+    idSelector,
+    (articles, id) => articles[id]
   )

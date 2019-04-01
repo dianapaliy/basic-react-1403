@@ -7,7 +7,7 @@ import { filtratedArticlesSelector } from '../selectors'
 
 export class ArticleList extends Component {
   static propTypes = {
-    articles: PropTypes.array.isRequired,
+    articles: PropTypes.object.isRequired,
     fetchAll: PropTypes.func,
     //from decorator
     openItemId: PropTypes.string,
@@ -32,13 +32,10 @@ export class ArticleList extends Component {
     if (this.state.error) return <h2>OOooops</h2>
 
     const { articles, toggleOpenItem, openItemId } = this.props
-    const articleItems = articles.map((article) => (
-      <li key={article.id} className="test--article-list__item">
-        <Article
-          article={article}
-          isOpen={article.id === openItemId}
-          onBtnClick={toggleOpenItem(article.id)}
-        />
+
+    const articleItems = Object.keys(articles).map((id) => (
+      <li key={id} className="test--article-list__item">
+        <Article id={id} isOpen={id === openItemId} onBtnClick={toggleOpenItem(id)} />
       </li>
     ))
 
